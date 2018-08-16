@@ -1,7 +1,9 @@
 module.exports = {
 
-    packageInstaller: function(){
-        
+    packageInstaller: function(pkgs){
+        let installOrder = ''
+
+        return installOrder; 
     }
 
 }
