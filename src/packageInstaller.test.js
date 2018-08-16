@@ -18,8 +18,31 @@ describe('packageInstaller input validations:', () => {
         expect( pkg.packageInstaller('') ).toBe('err: an array is required input')
     })
 
-    test('Not an array error (empty object)', () => {
-        expect( pkg.packageInstaller({}) ).toBe('err: an array is required input')
+    test('Not an array error (number)', () => {
+        expect( pkg.packageInstaller(25) ).toBe('err: an array is required input')
+    })
+
+    let badData = [ "Cyberportal: Ice", {CamelCaser: 'KittenService'} ]
+    test('Invalid item (object)', () => {
+        expect( pkg.packageInstaller(badData) ).toBe('err: item 1 in input array is invalid')
+    })
+
+    badData = [ "KittenService: CamelCaser", 25 ]
+    test('Invalid item (number)', () => {
+        expect( pkg.packageInstaller(badData) ).toBe('err: item 1 in input array is invalid')
+    })
+
+    badData = [ "KittenService: CamelCaser", "CamelCaser " ]
+    test('Invalid item (missing colon)', () => {
+        expect( pkg.packageInstaller(badData) ).toBe('err: item 1 in input array is invalid')
+    })
+
+})
+
+describe('packageInstaller validate logic', () => {
+
+    test('[ "KittenService: CamelCaser", "CamelCaser: " ] should return "CamelCaser, KittenService"', () => {
+        expect( pkg.packageInstaller([ "KittenService: CamelCaser", "CamelCaser: " ]) ).toBe("CamelCaser, KittenService")
     })
 
 })
