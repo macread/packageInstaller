@@ -1,0 +1,13 @@
+{
+    "name": "Package Installer",
+    "version": "1.0.0",
+    "description": "coding challenge from Pluralsite",
+    "main": "packageInstaller.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "dependencies": {
+        "cyprus": "^1.0.0",
+        "jest": "^23.5.0"
+    }
+}
