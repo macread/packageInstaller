@@ -45,4 +45,8 @@ describe('packageInstaller validate logic', () => {
         expect( pkg.packageInstaller([ "KittenService: CamelCaser", "CamelCaser: " ]) ).toBe("CamelCaser, KittenService")
     })
 
+    test('[ "CamelCaser: ", "KittenService: CamelCaser" ] should return "CamelCaser, KittenService"', () => {
+        expect( pkg.packageInstaller([ "KittenService: CamelCaser", "CamelCaser: " ]) ).toBe("CamelCaser, KittenService")
+    })
+
 })
