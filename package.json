@@ -1,5 +1,5 @@
 {
-    "name": "Package Installer",
+    "name": "package-installer",
     "version": "1.0.0",
     "description": "coding challenge from Pluralsite",
     "main": "packageInstaller.js",
