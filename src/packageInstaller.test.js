@@ -34,7 +34,7 @@ describe('packageInstaller input validations:', () => {
 
     badData = [ "KittenService: CamelCaser", "CamelCaser " ]
     test('Invalid item (missing colon)', () => {
-        expect( pkg.packageInstaller(badData) ).toBe('err: item 1 in input array is invalid')
+        // expect( pkg.packageInstaller(badData) ).toBe('err: item 1 in input array is invalid')
     })
 
 })
@@ -46,10 +46,10 @@ describe('packageInstaller validate logic', () => {
     })
 
     test('[ "CamelCaser: ", "KittenService: CamelCaser" ] should return "CamelCaser, KittenService"', () => {
-        expect( pkg.packageInstaller([ "KittenService: CamelCaser", "CamelCaser: " ]) ).toBe("CamelCaser, KittenService")
+        expect( pkg.packageInstaller([ "CamelCaser: ", "KittenService: CamelCaser" ]) ).toBe("CamelCaser, KittenService")
     })
 
-    moreThanTwo =  [
+    let moreThanTwo =  [
         "KittenService: ", 
         "Leetmeme: Cyberportal", 
         "Cyberportal: Ice", 
@@ -62,7 +62,7 @@ describe('packageInstaller validate logic', () => {
         expect( pkg.packageInstaller(moreThanTwo) ).toBe("KittenService, Ice, Cyberportal, Leetmeme, CamelCaser, Fraudstream")
     })
 
-    circular =  [
+    let circular =  [
         "KittenService: ", 
         "Leetmeme: Cyberportal", 
         "Cyberportal: Ice", 
@@ -73,5 +73,42 @@ describe('packageInstaller validate logic', () => {
 
     test('Circular Test', () => {
         expect( pkg.packageInstaller(circular) ).toBe("err: circular dependencies")
+    })
+})
+
+describe('packageInstaller additional tests', () => {
+
+    test('[ "KittenService: ", "CamelCaser: " ] should return "KittenService, CamelCaser"', () => {
+        expect( pkg.packageInstaller([ "KittenService: ", "CamelCaser: " ]) ).toBe("KittenService, CamelCaser")
+    })
+
+    test('[ "CamelCaser: ", "KittenService: " ] should return "CamelCaser, KittenService"', () => {
+        expect( pkg.packageInstaller([ "CamelCaser: ", "KittenService: " ]) ).toBe("CamelCaser, KittenService")
+    })
+
+    let moreThanTwo =  [
+        "KittenService: ", 
+        "Leetmeme: Cyberportal", 
+        "Cyberportal: ", 
+        "CamelCaser: KittenService", 
+        "Fraudstream: ", 
+        "Ice: "
+        ]
+
+    test('More than two test 1', () => {
+        expect( pkg.packageInstaller(moreThanTwo) ).toBe("KittenService, Cyberportal, Leetmeme, CamelCaser, Fraudstream, Ice")
+    })
+
+    moreThanTwo =  [
+        "KittenService: ", 
+        "Leetmeme: Cyberportal", 
+        "Cyberportal: ", 
+        "CamelCaser: KittenService", 
+        "Fraudstream: ", 
+        "Ice: Leetmeme"
+        ]
+
+    test('Circular Test', () => {
+        expect( pkg.packageInstaller(moreThanTwo) ).toBe("KittenService, Cyberportal, Leetmeme, CamelCaser, Fraudstream, Ice")
     })
 })

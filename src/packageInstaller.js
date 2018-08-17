@@ -9,43 +9,51 @@ module.exports = {
 
         // get the packages and dependencies in arrays so we can rearrange them
         // and push unique packages onto install order
-        let pkg = [];
-        let dependency = [];
+        // mapping the array causes the funciton to freeze when checking invalid formats
+        let pkgList = [];
+        let depList = [];
         for ( let i = 0; i < pkgs.length; i++){
             if (pkgs[i].indexOf(':') === -1) {
                 return `err: item ${i} in input array is invalid`
             }else{
                 let splitString = pkgs[i].split(':')
-                pkg.push(splitString[0].trim())
-                dependency.push(splitString[1].trim())
+                pkgList.push(splitString[0].trim())
+                depList.push(splitString[1].trim())
             }
         }
 
         // create the installtion order
         let installOrder = []
-        for ( let i = 0; i < pkg.length; i++ ){
-            if ( installOrder.indexOf(pkg[i]) === -1 ){
-                if (dependency[i] === '') {
-                    installOrder.push(pkg[i]);
+        for ( let i = 0; i < pkgList.length; i++ ){
+            // only need to load a package once
+            if ( installOrder.indexOf(pkgList[i]) === -1 ){  
+                if (depList[i] === '') {
+                    // no dependicies, put it on the list
+                    installOrder.push(pkgList[i]);  // no dependicies so put it on the list
                 }else{
-                    let dep = dependency[i]
+                    // follow the dependency chain to make sure not circular
+                    // and to add the last dependency
+                    let dep = depList[i]
                     let idx = i;
-                    do {
-                      idx = pkg.indexOf(dependency[idx])  
-                    } while ((dependency[idx] !== dep) && (dependency[idx] !== ''))
-                    if (dependency[idx] === '') {
-                      if ( installOrder.indexOf(pkg[idx]) === -1 ){
-                        installOrder.push(pkg[idx]);
+                    do {      
+                      idx = pkgList.indexOf(depList[idx])  
+                    } while ((depList[idx] !== dep) && (depList[idx] !== ''))
+                    if (depList[idx] === '') {
+                        // add the last depeendency if not already on the list
+                      if ( installOrder.indexOf(pkgList[idx]) === -1 ){
+                        installOrder.push(pkgList[idx]);
                       }
+                        // add the package in not already on the list
                       if ( installOrder.indexOf(dep) === -1 ){
                         installOrder.push(dep)
                       }
                     }else{
+                            // circular depency, go to build the package by had.
                         return 'err: circular dependencies'
                     }
-                    
-                    
-                    installOrder.push(pkg[i]);
+
+                        // no chaned dependencies so add terh package to the list
+                    installOrder.push(pkgList[i]);
 
                 }
             }
