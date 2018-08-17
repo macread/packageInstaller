@@ -49,4 +49,29 @@ describe('packageInstaller validate logic', () => {
         expect( pkg.packageInstaller([ "KittenService: CamelCaser", "CamelCaser: " ]) ).toBe("CamelCaser, KittenService")
     })
 
+    moreThanTwo =  [
+        "KittenService: ", 
+        "Leetmeme: Cyberportal", 
+        "Cyberportal: Ice", 
+        "CamelCaser: KittenService", 
+        "Fraudstream: Leetmeme", 
+        "Ice: "
+        ]
+
+    test('More than two test 1', () => {
+        expect( pkg.packageInstaller(moreThanTwo) ).toBe("KittenService, Ice, Cyberportal, Leetmeme, CamelCaser, Fraudstream")
+    })
+
+    circular =  [
+        "KittenService: ", 
+        "Leetmeme: Cyberportal", 
+        "Cyberportal: Ice", 
+        "CamelCaser: KittenService", 
+        "Fraudstream: ", 
+        "Ice: Leetmeme"
+        ]
+
+    test('Circular Test', () => {
+        expect( pkg.packageInstaller(circular) ).toBe("err: circular dependencies")
+    })
 })
